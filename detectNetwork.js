@@ -9,8 +9,16 @@
 
 var detectNetwork = function(cardNumber) {
   // Note: `cardNumber` will always be a string
-  var nums = cardNumber.split("");
-  var prefix = parseInt(nums[0]);
+  var usedCards = [];
+
+  // IIFE for checking if used cards are duplicates... returns if there is match already in array
+  (function() {
+    if (usedCards.includes(cardNumber) === false) {
+      usedCards.push(cardNumber);
+    } else {
+      return;
+    }
+  })();
 
   // The Diner's Club network always starts with a 38 or 39 and is 14 digits long
   if (
@@ -27,13 +35,7 @@ var detectNetwork = function(cardNumber) {
     return "American Express";
   }
   // Once you've read this, go ahead and try to implement this function, then return to the console.
-  // Visa;
-  if (
-    (cardNumber.length === 13 || 16 || 19) &&
-    cardNumber.startsWith("4") === true
-  ) {
-    return "Visa";
-  }
+
   // Mastercard
   if (
     cardNumber.length === 16 &&
@@ -101,5 +103,13 @@ var detectNetwork = function(cardNumber) {
       cardNumber.startsWith("6759") === true)
   ) {
     return "Switch";
+  }
+
+  // Visa (reordered so that control flow reflects correct cards with larger prefixes returning over smaller prefixes in cases of duplicates)
+  if (
+    (cardNumber.length === 13 || 16 || 19) &&
+    cardNumber.startsWith("4") === true
+  ) {
+    return "Visa";
   }
 };
